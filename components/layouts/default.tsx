@@ -18,16 +18,22 @@ export function DefaultLayout({ children }: DefaultLayoutProps) {
         </div>
 
         <div className="flex-none">
-          <Link
-            className="btn btn-square btn-ghost"
-            href="https://github.com/lnkkerst/codeforces-gym-tracker"
-            prefetch={false}
-          >
-            <FaGithub className="size-6" />
-          </Link>
-          <SettingsDialogButton className="btn btn-square btn-ghost">
-            <MdSettings className="size-6" />
-          </SettingsDialogButton>
+          <div className="tooltip tooltip-bottom" data-tip="欢迎 Star :)">
+            <Link
+              className="btn btn-square btn-ghost"
+              href="https://github.com/lnkkerst/codeforces-gym-tracker"
+              target="_blank"
+              prefetch={false}
+            >
+              <FaGithub className="size-6" />
+            </Link>
+          </div>
+
+          <div className="tooltip tooltip-bottom" data-tip="设置">
+            <SettingsDialogButton className="btn btn-square btn-ghost">
+              <MdSettings className="size-6" />
+            </SettingsDialogButton>
+          </div>
         </div>
       </div>
 

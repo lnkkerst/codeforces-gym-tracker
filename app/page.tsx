@@ -43,7 +43,7 @@ export default function Home() {
     }
 
     if (data.length === 0) {
-      return <div className="text-center text-warning">没有找到任何 GYM</div>;
+      return <div className="text-center">没有找到任何 GYM :(</div>;
     }
 
     return (
