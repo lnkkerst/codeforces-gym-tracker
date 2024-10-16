@@ -18,6 +18,7 @@ const config: Config = {
   plugins: [daisyui],
   daisyui: {
     themes: ["winter", "sunset"],
+    darkTheme: "sunset",
   },
 };
 export default config;
