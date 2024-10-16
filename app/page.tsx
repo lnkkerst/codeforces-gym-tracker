@@ -76,29 +76,34 @@ export default function Home() {
             申请一个 API Key 并将其填入右上角的设置中，以获取私有 GYM 的信息。
           </div>
 
-          <button
-            className="btn btn-circle btn-ghost no-animation flex-none"
-            onClick={e => {
-              e.preventDefault();
-              downloadTable();
-            }}
-          >
-            <MdSave className="size-6" />
-          </button>
-          <button
-            className="btn btn-circle btn-ghost no-animation flex-none"
-            disabled={isValidating}
-            onClick={e => {
-              e.preventDefault();
-              mutate();
-            }}
-          >
-            {isValidating ? (
-              <span className="loading loading-spinner"></span>
-            ) : (
-              <MdRefresh className="size-6" />
-            )}
-          </button>
+          <div className="tooltip" data-tip="保存为表格文件">
+            <button
+              className="btn btn-circle btn-ghost no-animation flex-none"
+              onClick={e => {
+                e.preventDefault();
+                downloadTable();
+              }}
+            >
+              <MdSave className="size-6" />
+            </button>
+          </div>
+
+          <div className="tooltip" data-tip="重新获取数据">
+            <button
+              className="btn btn-circle btn-ghost no-animation flex-none"
+              disabled={isValidating}
+              onClick={e => {
+                e.preventDefault();
+                mutate();
+              }}
+            >
+              {isValidating ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                <MdRefresh className="size-6" />
+              )}
+            </button>
+          </div>
         </div>
         <ContestDetailsTable ids={data} ref={tableRef} />
       </div>
