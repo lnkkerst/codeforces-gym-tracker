@@ -18,7 +18,11 @@ export function DefaultLayout({ children }: DefaultLayoutProps) {
         </div>
 
         <div className="flex-none">
-          <Link className="btn btn-square btn-ghost" href="/" prefetch={false}>
+          <Link
+            className="btn btn-square btn-ghost"
+            href="https://github.com/lnkkerst/codeforces-gym-tracker"
+            prefetch={false}
+          >
             <FaGithub className="size-6" />
           </Link>
           <SettingsDialogButton className="btn btn-square btn-ghost">
