@@ -59,7 +59,7 @@ export default function Home() {
             >
               点这里
             </Link>
-            申请一个 API Key 并将其填入左上角的设置中
+            申请一个 API Key 并将其填入右上角的设置中
           </div>
           <button
             className="btn btn-circle btn-ghost no-animation"
