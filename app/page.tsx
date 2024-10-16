@@ -1,21 +1,35 @@
 "use client";
 
 import { useAllParticipatedGymIds } from "@/hooks/codeforces";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ContestDetailsTable } from "./components/contest";
 import { queue } from "@/utils/queue";
 import { useAtomValue } from "jotai";
 import { settingsAtom } from "@/atoms";
 import Link from "next/link";
-import { MdRefresh } from "react-icons/md";
+import { MdRefresh, MdSave } from "react-icons/md";
+import { utils as xlsxUtils, writeFile as xlsxWriteFile } from "xlsx";
 
 export default function Home() {
   const [username, setUsername] = useState("");
   const [input, setInput] = useState("");
   const settings = useAtomValue(settingsAtom);
+  const tableRef = useRef<HTMLTableElement>(null);
 
   const { data, isLoading, error, mutate, isValidating } =
     useAllParticipatedGymIds(username);
+
+  function downloadTable() {
+    const tableEl = tableRef.current;
+    if (!tableEl) {
+      return;
+    }
+    const book = xlsxUtils.table_to_book(tableEl);
+    const ws = book.Sheets[book.SheetNames[0]];
+
+    ws["!cols"] = [{ wch: 10 }, { wch: 50 }, { wch: 39 }];
+    xlsxWriteFile(book, `gyms_${username}_${Date.now()}.xlsx`);
+  }
 
   useEffect(() => {
     mutate();
@@ -48,21 +62,31 @@ export default function Home() {
 
     return (
       <div>
-        <div className="flex items-center justify-between mb-4 gap-6">
-          <div className="text-sm text-base-content/80 pl-2">
+        <div className="flex items-center mb-4">
+          <div className="text-sm text-base-content/80 pl-2 pr-6 flex-1">
             没有找到想要的 GYM？您可能需要
             <Link
               href="https://codeforces.com/settings/api"
               target="_blank"
-              className="link"
+              className="link link-accent link-hover"
               prefetch={false}
             >
               点这里
             </Link>
-            申请一个 API Key 并将其填入右上角的设置中
+            申请一个 API Key 并将其填入右上角的设置中，以获取私有 GYM 的信息。
           </div>
+
           <button
-            className="btn btn-circle btn-ghost no-animation"
+            className="btn btn-circle btn-ghost no-animation flex-none"
+            onClick={e => {
+              e.preventDefault();
+              downloadTable();
+            }}
+          >
+            <MdSave className="size-6" />
+          </button>
+          <button
+            className="btn btn-circle btn-ghost no-animation flex-none"
             disabled={isValidating}
             onClick={e => {
               e.preventDefault();
@@ -76,7 +100,7 @@ export default function Home() {
             )}
           </button>
         </div>
-        <ContestDetailsTable ids={data} />
+        <ContestDetailsTable ids={data} ref={tableRef} />
       </div>
     );
   };

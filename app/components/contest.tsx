@@ -2,46 +2,70 @@
 
 import { useContestDetails } from "@/hooks/codeforces";
 import Link from "next/link";
+import { forwardRef } from "react";
 import { MdRefresh } from "react-icons/md";
 
 export type ContestDetailsRowProps = {
   id: number;
 };
 export function ContestDetailsRow({ id }: ContestDetailsRowProps) {
-  const { data, isLoading, error, mutate } = useContestDetails(id);
+  const { data, isLoading, error, mutate, isValidating } =
+    useContestDetails(id);
 
   const Content = () => {
-    if (error) {
+    if (error && !isValidating) {
       return (
-        <div className="flex items-center gap-2">
-          <button
-            className="link link-hover"
-            onClick={e => {
-              e.preventDefault();
-              mutate();
-            }}
-          >
-            <MdRefresh />
-          </button>
-          <span className="text-sm text-error">
-            {error?.message || "未知错误"}
-          </span>
-        </div>
+        <td>
+          <div className="flex items-center gap-2">
+            <button
+              className="link link-hover"
+              onClick={e => {
+                e.preventDefault();
+                mutate();
+              }}
+            >
+              <MdRefresh />
+            </button>
+            <span className="text-sm text-error">
+              {error?.message || "未知错误"}
+            </span>
+          </div>
+        </td>
       );
     }
     if (isLoading || !data) {
-      return <span className="loading loading-xs loading-spinner"></span>;
+      return (
+        <td>
+          <span className="loading loading-xs loading-spinner"></span>
+        </td>
+      );
     }
 
+    const url = `https://codeforces.com/gym/${id}`;
+
     return (
-      <Link
-        className="link link-hover"
-        href={`https://codeforces.com/gym/${id}`}
-        target="_blank"
-        prefetch={false}
-      >
-        {data.name}
-      </Link>
+      <>
+        <td>
+          <Link
+            className="link link-hover"
+            href={url}
+            target="_blank"
+            prefetch={false}
+          >
+            {data.name}
+          </Link>
+        </td>
+        <td className="hidden">
+          <Link
+            className="link link-hover"
+            href={url}
+            target="_blank"
+            prefetch={false}
+          >
+            {url}
+          </Link>
+        </td>
+      </>
     );
   };
 
@@ -57,9 +81,7 @@ export function ContestDetailsRow({ id }: ContestDetailsRowProps) {
           {id}
         </Link>
       </td>
-      <td>
-        <Content />
-      </td>
+      <Content />
     </tr>
   );
 }
@@ -67,13 +89,17 @@ export function ContestDetailsRow({ id }: ContestDetailsRowProps) {
 export type ContestDetailsTableProps = {
   ids: number[];
 };
-export function ContestDetailsTable({ ids }: ContestDetailsTableProps) {
+export const ContestDetailsTable = forwardRef<
+  HTMLTableElement,
+  ContestDetailsTableProps
+>(function ContestDetailsTable({ ids }: ContestDetailsTableProps, ref) {
   return (
-    <table className="table">
+    <table className="table" ref={ref}>
       <thead>
         <tr>
           <th className="w-24">ID</th>
           <th>名称</th>
+          <th className="hidden">链接</th>
         </tr>
       </thead>
       <tbody>
@@ -83,4 +109,4 @@ export function ContestDetailsTable({ ids }: ContestDetailsTableProps) {
       </tbody>
     </table>
   );
-}
+});
