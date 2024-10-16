@@ -37,7 +37,7 @@ export function DefaultLayout({ children }: DefaultLayoutProps) {
         </div>
       </div>
 
-      <div className="p-4 w-[90%] max-w-[720px] mx-auto">{children}</div>
+      <div className="p-0 sm:p-4 w-[90%] max-w-[720px] mx-auto">{children}</div>
     </div>
   );
 }

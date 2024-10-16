@@ -119,16 +119,18 @@ export default function Home() {
           setUsername(input);
         }}
       >
-        <div className="flex flex-row items-center gap-4">
-          <input
-            type="text"
-            className="input input-bordered grow"
-            placeholder="用户名"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-          />
+        <div className="flex flex-row items-center gap-2 sm:gap-4">
+          <div className="flex-1">
+            <input
+              type="text"
+              className="input input-bordered w-full"
+              placeholder="用户名"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+            />
+          </div>
 
-          <button className="btn btn-primary w-20" type="submit">
+          <button className="btn btn-primary w-20 flex-none" type="submit">
             查询
           </button>
         </div>
