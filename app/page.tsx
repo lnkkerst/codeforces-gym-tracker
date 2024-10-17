@@ -1,7 +1,7 @@
 "use client";
 
 import { useAllParticipatedGymIds } from "@/hooks/codeforces";
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { ContestDetailsTable } from "./components/contest";
 import { queue } from "@/utils/queue";
 import { useAtomValue } from "jotai";
@@ -41,14 +41,62 @@ export default function Home() {
     }
 
     if (error && !isValidating) {
-      return (
-        <div className="text-center text-error">
-          {error?.message || "未知错误"}
+      const ErrorMsgWithRetry = ({ children }: { children: ReactNode }) => (
+        <div className="flex flex-col items-center gap-1">
+          <div className="text-error">{children}</div>
+
+          <div>
+            <button
+              className="link link-hover no-animation text-accent"
+              onClick={e => {
+                e.preventDefault();
+                mutate();
+              }}
+            >
+              点此重试
+            </button>
+          </div>
         </div>
+      );
+
+      const ErrorMsg = ({ children }: { children: ReactNode }) => {
+        return <div className="text-center text-error">{children}</div>;
+      };
+
+      if (error instanceof SyntaxError) {
+        return (
+          <ErrorMsgWithRetry>
+            获取到了格式错误的数据，请先检查能否正常访问{" "}
+            <Link
+              prefetch={false}
+              href="https://codeforces.com/"
+              target="_blank"
+              className="link"
+            >
+              Codeforces
+            </Link>
+          </ErrorMsgWithRetry>
+        );
+      }
+
+      if (error?.message?.includes("handle: Field should contain only")) {
+        return <ErrorMsg>用户名格式不合法</ErrorMsg>;
+      }
+
+      if (error?.message?.includes("handle: User with handle")) {
+        return <ErrorMsg>{`用户 ${username} 不存在`}</ErrorMsg>;
+      }
+
+      if (error?.message?.includes("apiKey: Incorrect API key")) {
+        return <ErrorMsg>API Key 不正确，请点击右上角设置图标修改</ErrorMsg>;
+      }
+
+      return (
+        <ErrorMsgWithRetry>{`未知错误：${error?.message}`}</ErrorMsgWithRetry>
       );
     }
 
-    if (isLoading || !data) {
+    if (isLoading || !data || isValidating) {
       return (
         <div className="flex justify-center">
           <span className="loading loading-spinner"></span>

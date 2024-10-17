@@ -13,7 +13,7 @@ export function useAllParticipatedGymIds(username: string) {
     ["all-participated-gym-ids", username],
     async ([, username]) => {
       if (!inRange(username.length, 3, 25)) {
-        return [];
+        throw new Error("用户名长度比必须在 3 到 24 个字符之间");
       }
       return await queue.add(
         async () => {
