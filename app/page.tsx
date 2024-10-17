@@ -79,8 +79,14 @@ export default function Home() {
         );
       }
 
+      if (error?.message?.includes("用户名长度")) {
+        return <ErrorMsg>{error?.message}</ErrorMsg>;
+      }
+
       if (error?.message?.includes("handle: Field should contain only")) {
-        return <ErrorMsg>用户名格式不合法</ErrorMsg>;
+        return (
+          <ErrorMsg>{`用户名格式不合法：${error?.message?.replace("handle: ", "")}`}</ErrorMsg>
+        );
       }
 
       if (error?.message?.includes("handle: User with handle")) {
